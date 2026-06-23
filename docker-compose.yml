@@ -20,7 +20,7 @@ services:
       - CSPR_STREAM_URL=http://cspr-mock:8080/stream
       - CORS_ORIGIN=http://localhost:3000
     volumes:
-      - ./derisk-contracts/target:/contracts/target
+      - ./derisk_vault/target:/contracts/target
       - "${HOST_SECRET_KEY_PATH}:${CONTAINER_SECRET_KEY_PATH}:ro"
     depends_on:
       - cspr-mock

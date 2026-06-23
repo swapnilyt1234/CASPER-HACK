@@ -56,9 +56,35 @@ impl DeRiskVault {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use odra::host::{HostEnv, HostRef, Deployer};
+
+    #[test]
+    fn test_initialization() {
+        let env = odra::test_env();
+        let agent = env.get_account(1);
+        
+        let contract = DeRiskVaultInitArgs { agent }.instantiate(&env);
+        assert_eq!(contract.get_premium_rate(), 5);
+    }
 
     #[test]
     fn test_permissioned_update() {
-        // The core logic compiles. Full deployment tests require cargo-odra CLI context.
+        let env = odra::test_env();
+        let agent = env.get_account(1);
+        let intruder = env.get_account(2);
+        
+        let mut contract = DeRiskVaultInitArgs { agent }.instantiate(&env);
+        
+        // Test authorized
+        env.set_caller(agent);
+        contract.update_risk_params(20, true);
+        assert_eq!(contract.get_premium_rate(), 20);
+        
+        // Test unauthorized
+        env.set_caller(intruder);
+        let res = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            contract.update_risk_params(10, false);
+        }));
+        assert!(res.is_err());
     }
 }

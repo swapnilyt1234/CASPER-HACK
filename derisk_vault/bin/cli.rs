@@ -1,6 +1,6 @@
 //! This example demonstrates how to use the `odra-cli` tool to deploy and interact with a smart contract.
 
-use derisk_onchain::flipper::Flipper;
+use derisk_vault::flipper::Flipper;
 use odra::host::{HostEnv, NoArgs};
 use odra::schema::casper_contract_schema::NamedCLType;
 use odra_cli::{
@@ -69,7 +69,7 @@ impl ScenarioMetadata for FlippingScenario {
 /// Main function to run the CLI tool.
 pub fn main() {
     OdraCli::new()
-        .about("CLI tool for derisk_onchain smart contract")
+        .about("CLI tool for derisk_vault smart contract")
         .deploy(FlipperDeployScript)
         .contract::<Flipper>()
         .scenario(FlippingScenario)
