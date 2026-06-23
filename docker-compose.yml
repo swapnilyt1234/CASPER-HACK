@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  cspr-mock:
+    build:
+      context: ./derisk-agent
+      dockerfile: Dockerfile.mock
+    ports:
+      - "8080:8080"
+    networks:
+      - derisk-net
+
+  derisk-agent:
+    build:
+      context: ./derisk-agent
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - CSPR_STREAM_URL=http://cspr-mock:8080/stream
+      - CORS_ORIGIN=http://localhost:3000
+    volumes:
+      - ./derisk-contracts/target:/contracts/target
+      - "${HOST_SECRET_KEY_PATH}:${CONTAINER_SECRET_KEY_PATH}:ro"
+    depends_on:
+      - cspr-mock
+    networks:
+      - derisk-net
+
+  derisk-web:
+    build:
+      context: ./derisk-web
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_AGENT_API_URL=http://localhost:5000
+    depends_on:
+      - derisk-agent
+    networks:
+      - derisk-net
+
+networks:
+  derisk-net:
+    driver: bridge

@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "derisk-agent-server": {
+      "command": "python",
+      "args": ["-m", "mcp_server"],
+      "env": {
+        "AGENT_LOG_DIR": "/app/logs",
+        "WASM_STATE_DIR": "/contracts/target/wasm32-unknown-unknown/release"
+      }
+    }
+  }
+}

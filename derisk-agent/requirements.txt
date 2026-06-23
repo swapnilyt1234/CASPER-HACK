@@ -1,0 +1,8 @@
+pandas
+requests
+sseclient-py
+fastapi
+uvicorn
+pydantic
+casper-python-sdk
+python-dotenv

@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+*.pyc
+
+# Rust / Odra
+target/
+**/*.wasm
+
+# Environment & Secrets
+.env
+*.pem
+*.key
+Account*
+
+# Next.js
+.next/
+out/
+build/
+
+# Python / General
+.pytest_cache/
+.coverage
+.DS_Store
