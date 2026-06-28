@@ -121,10 +121,10 @@ export default function VaultDashboard() {
   const handleDeposit = async (amount: number): Promise<string> => {
     if (!walletAddress) throw new Error('Wallet not connected');
 
-    // @ts-ignore - Bypass Vercel TS build error for dynamic Web3 imports
-    const CasperSDK_Raw = await import('casper-js-sdk');
+    // Cast the dynamic import to 'any' to completely disable TS checking for this module
+    const CasperSDK_Raw = (await import('casper-js-sdk')) as any;
     
-    // Safely unwrap the module whether Next.js bundles it as CommonJS or ESM
+    // Safely unwrap the module for production bundling
     const sdkTarget = CasperSDK_Raw.default || CasperSDK_Raw;
     
     const { 
