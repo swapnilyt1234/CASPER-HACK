@@ -2,6 +2,7 @@
 
 import fs from 'fs/promises';
 import path from 'path';
+import { revalidatePath } from 'next/cache';
 
 export interface AuditLog {
     deployHash: string;
@@ -17,7 +18,10 @@ export async function fetchAuditTrail(): Promise<AuditLog[]> {
     try {
         const logPath = path.join(process.cwd(), 'audit_logs.json');
         const fileContents = await fs.readFile(logPath, 'utf8');
-        return JSON.parse(fileContents);
+        const logs = JSON.parse(fileContents);
+        // Bust the Next.js route cache so every poll sees the latest file
+        revalidatePath('/vault');
+        return logs;
     } catch (error) {
         return [
             {

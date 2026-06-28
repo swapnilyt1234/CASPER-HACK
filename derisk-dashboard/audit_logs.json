@@ -1,5 +1,14 @@
 [
     {
+        "deployHash": "319068927d745ebda03ef100d7bbe4d629cc9bb683b1142878badd82eba8761a",
+        "timestamp": "2026-06-28T02:08:24.323676Z",
+        "action": "System Param Optimization (Healed)",
+        "rate": 5,
+        "halted": false,
+        "status": "Success",
+        "cost": "2.93 CSPR"
+    },
+    {
         "deployHash": "ce11515934e8282d4b4d45012b069ae55ab2b783cf787eba43d305e3334fa720",
         "timestamp": "2026-06-27T10:08:47.662660Z",
         "action": "System Param Optimization (Healed)",

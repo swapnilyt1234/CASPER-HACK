@@ -1,5 +1,8 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+@source "../src";
 @import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -45,7 +48,7 @@
 :root {
   --radius: 0.625rem;
 
-  /* Paper-white canvas */
+  /* Paper-white canvas, Coinbase-esque calm */
   --background: oklch(0.995 0.002 240);
   --foreground: oklch(0.18 0.020 250);
 
@@ -91,7 +94,7 @@
   --input: oklch(0.94 0.006 250);
   --ring: oklch(0.50 0.20 258);
 
-  /* Hero dark surface tokens (landing hero & footer) */
+  /* Hero dark surface tokens (used on landing hero & footer) */
   --hero-bg: oklch(0.16 0.025 258);
   --hero-bg-2: oklch(0.20 0.040 260);
   --hero-fg: oklch(0.985 0.003 240);

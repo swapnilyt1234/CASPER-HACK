@@ -10,8 +10,10 @@ target/
 
 # Environment & Secrets
 .env
+.env.*
 *.pem
 *.key
+*.log
 Account*
 
 # Next.js
