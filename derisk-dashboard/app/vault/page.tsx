@@ -7,19 +7,6 @@ import { Header } from '@/app/components/dashboard/Header';
 import { StatusCards } from '@/app/components/dashboard/StatusCards';
 import { VaultForm } from '@/app/components/dashboard/VaultForm';
 import { SentinelFeed } from '@/app/components/dashboard/SentinelFeed';
-import * as CasperSDK_Raw from 'casper-js-sdk';
-
-// Robust runtime check to handle variations in production bundling environments
-const sdkTarget = (CasperSDK_Raw as any).default || CasperSDK_Raw;
-
-const { 
-  CLPublicKey, 
-  DeployUtil, 
-  RuntimeArgs, 
-  CLValueBuilder, 
-  decodeBase16, 
-  CasperClient 
-} = sdkTarget as any;
 
 const REFRESH_SECONDS = 10;
 
@@ -133,6 +120,21 @@ export default function VaultDashboard() {
   /* ──────────────────────────────────────────────── */
   const handleDeposit = async (amount: number): Promise<string> => {
     if (!walletAddress) throw new Error('Wallet not connected');
+
+    // @ts-ignore - Bypass Vercel TS build error for dynamic Web3 imports
+    const CasperSDK_Raw = await import('casper-js-sdk');
+    
+    // Safely unwrap the module whether Next.js bundles it as CommonJS or ESM
+    const sdkTarget = CasperSDK_Raw.default || CasperSDK_Raw;
+    
+    const { 
+      CLPublicKey, 
+      DeployUtil, 
+      RuntimeArgs, 
+      CLValueBuilder, 
+      decodeBase16,
+      CasperClient
+    } = sdkTarget;
 
     const provider = (window as any).CasperWalletProvider();
     const senderKey = CLPublicKey.fromHex(walletAddress);
