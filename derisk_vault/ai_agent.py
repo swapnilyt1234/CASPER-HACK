@@ -18,7 +18,7 @@ try:
 except ImportError:
     from pycspr.types import CLV_U8, CLV_Bool
 
-TESTNET_RPC_URL = "https://node.testnet.casper.network/rpc"
+TESTNET_RPC_URL = os.getenv("RPC_NODE_URL", "https://node.testnet.casper.network/rpc")
 REQUEST_TIMEOUT = 30
 
 # ── 1. GLOBAL GAS-SAVING CACHE STATE ──────────────────────────────────
@@ -28,7 +28,12 @@ def analyze_market():
     print("\n[🧠] AI AGENT: Scanning global crypto markets...")
     try:
         url = "https://api.coingecko.com/api/v3/simple/price?ids=casper-network&vs_currencies=usd&include_24hr_change=true"
-        response = requests.get(url, timeout=10).json()
+        headers = {}
+        api_key = os.getenv("COINGECKO_API_KEY")
+        if api_key:
+            headers["x-cg-demo-api-key"] = api_key
+            
+        response = requests.get(url, headers=headers, timeout=10).json()
         casper_data = response.get("casper-network", {})
         
         # Pull live market data (Training wheels removed!)
@@ -121,9 +126,8 @@ async def main():
         print("[😴] AI AGENT: Market state is identical to current contract parameters. Skipping deployment to save gas.")
         return
 
-    key_candidates = ["../Account 4_secret_key.pem", "Account 4_secret_key.pem", "secret_key.pem"]
-    KEY_PATH = next((p for p in key_candidates if p and os.path.exists(p)), None)
-    if not KEY_PATH:
+    KEY_PATH = os.getenv("CASPER_PRIVATE_KEY_PATH")
+    if not KEY_PATH or not os.path.exists(KEY_PATH):
         print("[-] Error: Could not find Admin secret_key.pem.")
         return
 
@@ -204,15 +208,15 @@ async def run_sentinel():
     while True:
         try:
             print("\n" + "="*60)
-            print("[⏱️] Initiating scheduled market scan...")
+            print(f"[{datetime.utcnow().isoformat()}] [⏱️] Initiating scheduled market scan...")
             await main()
         except Exception as e:
             print(f"\n[💥] SENTINEL CRITICAL ERROR CAUGHT: {e}")
             print("[!] Agent infrastructure survived the exception. Rebooting for next cycle...")
             
-        # 1800 seconds = 30 Minutes loop interval
-        sleep_seconds = 1800 
-        print(f"\n[⏳] Sentinel hibernating. Next dynamic inspection in {int(sleep_seconds / 60)} minutes.")
+        # 60 seconds = 1 Minute loop interval for cloud background worker
+        sleep_seconds = 60 
+        print(f"\n[{datetime.utcnow().isoformat()}] [⏳] Sentinel hibernating. Next dynamic inspection in {sleep_seconds} seconds.")
         await asyncio.sleep(sleep_seconds)
 
 
