@@ -121,12 +121,7 @@ export default function VaultDashboard() {
   const handleDeposit = async (amount: number): Promise<string> => {
     if (!walletAddress) throw new Error('Wallet not connected');
 
-    // Cast the dynamic import to 'any' to completely disable TS checking for this module
-    const CasperSDK_Raw = (await import('casper-js-sdk')) as any;
-    
-    // Safely unwrap the module for production bundling
-    const sdkTarget = CasperSDK_Raw.default || CasperSDK_Raw;
-    
+    const sdk = await import('casper-js-sdk');
     const { 
       CLPublicKey, 
       DeployUtil, 
@@ -134,7 +129,7 @@ export default function VaultDashboard() {
       CLValueBuilder, 
       decodeBase16,
       CasperClient
-    } = sdkTarget;
+    } = sdk;
 
     const provider = (window as any).CasperWalletProvider();
     const senderKey = CLPublicKey.fromHex(walletAddress);
